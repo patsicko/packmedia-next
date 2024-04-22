@@ -10,7 +10,10 @@ function Feed() {
     </section>
 
     <section className='hidden md:inline-grid md:col-span-1'>
-  <MiniProfile/>
+        <div className='fixed w-[380px]'>
+        <MiniProfile/>
+        </div>
+  
     </section>
     </main>
   )
