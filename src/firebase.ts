@@ -58,4 +58,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+if (typeof window !== 'undefined') {
+  // Initialize Firebase Analytics here
+  const analytics = getAnalytics(app);
+}
+

@@ -9,18 +9,26 @@ import { HiCamera } from 'react-icons/hi'
 import { AiOutlineClose } from 'react-icons/ai'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '@/firebase'
+import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore'
+import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
 
 
 
 function Header() {
 
   const {data:session} = useSession()
+
+
   const [isOpen, setIsOpen]=useState(false)
   const [selectedFile,setSelectedFile]= useState<File|null>(null)
   const [imageFileUrl,setImageFileUrl] = useState<any>(null);
-  const [imageFileUploading,setImageFileUploading] = useState(false)
+  const [imageFileUploading,setImageFileUploading] = useState(false);
+  const [postUploading, setPostUploading] = useState(false);
+  const [caption,setCaption] = useState('')
 
-  const filePickerRef = useRef<HTMLInputElement>(null)
+  const filePickerRef = useRef<HTMLInputElement>(null);
+
+  const db = getFirestore(app)
 
   const addImageToPost=(e: ChangeEvent<HTMLInputElement>)=>{
   const file = e.target.files?.[0]
@@ -70,6 +78,23 @@ function Header() {
     ); 
     
   }
+
+
+ const handleSubmit=async ()=>{
+ setPostUploading(true);
+const docRef = await addDoc(collection(db,'posts'),{
+  username:(session?.user as CustomUser).username,
+  caption,
+  profileImg:session?.user?.image,
+  image:imageFileUrl,
+  timestamp: serverTimestamp()
+
+
+});
+setPostUploading(false);
+setIsOpen(false)
+
+  }
     
   return (  
     <div className='shadow-sm border-b sticky top-0 bg-white z-30 p-3'>
@@ -106,7 +131,7 @@ function Header() {
         >
           <div className='flex flex-col justify-center items-center h-[100%'>
             {selectedFile?(
-              <img src={imageFileUrl} alt="selected file" className='w-full max-h-[390px]  cursor-pointer' onClick={()=>setSelectedFile(null)} />
+              <img src={imageFileUrl} alt="selected file" className={`w-full max-h-[390px]  cursor-pointer ${imageFileUploading ? 'animate-pulse':''}`} onClick={()=>setSelectedFile(null)} />
             ):(
               <HiCamera onClick={()=>filePickerRef?.current?.click()} className='text-5xl text-gray-400 cursor-pointer'/>
             )}
@@ -116,8 +141,10 @@ function Header() {
 
            <input type="file" hidden ref={filePickerRef} name="" id="" accept='image/*' onChange={addImageToPost} />
           </div>
-          <input type="text" maxLength={150} placeholder='please enter your caption ' className='m-4 border-none text-center w-full focus:ring-0 outline-none' />
-         <button disabled className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>Upload post</button>
+          <input onChange={(e)=>setCaption(e?.target?.value)} type="text" maxLength={150} placeholder='please enter your caption ' className='m-4 border-none text-center w-full focus:ring-0 outline-none' />
+         <button onClick={handleSubmit} disabled ={
+          !selectedFile || caption.trim()==='' || postUploading || imageFileUploading
+         } className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>Upload post</button>
          <AiOutlineClose className='cursor-pointer absolute top-2 right-2 hover:text-red-600 transition duration-300' onClick={()=>setIsOpen(false)}/>
         </Modal>
       )
