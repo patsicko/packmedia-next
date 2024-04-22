@@ -12,6 +12,10 @@ import { app } from '@/firebase'
 import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore'
 import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+
 
 
 function Header() {
@@ -92,7 +96,8 @@ const docRef = await addDoc(collection(db,'posts'),{
 
 });
 setPostUploading(false);
-setIsOpen(false)
+setIsOpen(false);
+location.reload();
 
   }
     
@@ -127,9 +132,11 @@ setIsOpen(false)
      </div>
      {
       isOpen && (
-        <Modal isOpen={isOpen} onRequestClose={()=>setIsOpen(false)} ariaHideApp={false} className='max-w-lg w-[90%] p-6 absolute top-56 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md  '
+        
+
+        <Modal isOpen={isOpen} onRequestClose={()=>setIsOpen(false)} ariaHideApp={false} className='w-[60%] p-6 absolute top-36 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md   '
         >
-          <div className='flex flex-col justify-center items-center h-[100%'>
+          <div className='flex flex-col justify-center items-center h-[100%' >
             {selectedFile?(
               <img src={imageFileUrl} alt="selected file" className={`w-full max-h-[390px]  cursor-pointer ${imageFileUploading ? 'animate-pulse':''}`} onClick={()=>setSelectedFile(null)} />
             ):(
@@ -141,7 +148,32 @@ setIsOpen(false)
 
            <input type="file" hidden ref={filePickerRef} name="" id="" accept='image/*' onChange={addImageToPost} />
           </div>
-          <input onChange={(e)=>setCaption(e?.target?.value)} type="text" maxLength={150} placeholder='please enter your caption ' className='m-4 border-none text-center w-full focus:ring-0 outline-none' />
+          {/* <textarea 
+              onChange={(e)=>setCaption(e?.target?.value)} 
+              maxLength={1500} 
+              placeholder='Please enter your caption' 
+              className='m-4 border-none text-center w-full focus:ring-0 outline-none resize-none'
+              rows={5}
+            />
+        */}
+
+          <ReactQuill
+            value={caption}
+            onChange={(value) => setCaption(value)}
+            placeholder='Please enter your caption, including text explanations and code snippets'
+            theme='snow'
+            modules={{
+              toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image'],
+                ['code-block']
+              ],
+            }}
+            className='w-full h-80 overflow-auto border text-center focus:ring-0 outline-none resize-none'
+          />
+           
          <button onClick={handleSubmit} disabled ={
           !selectedFile || caption.trim()==='' || postUploading || imageFileUploading
          } className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>Upload post</button>

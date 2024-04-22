@@ -17,7 +17,7 @@ function MiniProfile() {
     };
 
   return (
-    <div className='flex items-center justify-between mt-14 scroll-ml-10'>
+    <div className='flex items-center justify-between mt-14 ml-10 w-full'>
      <img src={session?.user?.image || '/packlogo.png' } alt="user img" className=' w-16 h-16 rounded-full border p-[2px]'/>
      <div className='flex-1 ml-4'>
         <h2 className='font-bold'>
