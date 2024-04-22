@@ -1,11 +1,12 @@
-import Image from "next/image";
+import Feed from '@/components/Feed'
+import React from 'react'
 
-export default function Home() {
+function page() {
   return (
-    <main >
-      
-      <h1>Hello</h1>
-     
-    </main>
-  );
+   <>
+   <Feed/>
+   </>
+  )
 }
+
+export default page
