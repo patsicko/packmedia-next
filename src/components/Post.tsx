@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
+import LikeSection from './LikeSection';
 
 export interface PostObject{
 id:string,
@@ -22,8 +23,9 @@ function Post({post}:{post:PostObject}) {
       <p className='flex-1 font-bold'>{post.username}</p>
       <HiOutlineDotsVertical className='cursor-pointer h-5'/>
         </div>
-
+      
         <img  src={post.image} alt={post.caption} className='object-cover w-full'/>
+        <LikeSection id={post.id}/>
        
         <p className='p-5 overflow-scroll'>
             <span className='font-bold mr-2'>{post.username}</span>
