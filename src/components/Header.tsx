@@ -14,6 +14,7 @@ import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { DiVim } from 'react-icons/di'
 
 
 
@@ -28,8 +29,13 @@ function Header() {
   const [imageFileUrl,setImageFileUrl] = useState<any>(null);
   const [imageFileUploading,setImageFileUploading] = useState(false);
   const [postUploading, setPostUploading] = useState(false);
-  const [caption,setCaption] = useState('')
+  const [caption,setCaption] = useState('');
+  const [isVideo,setIsVideo] = useState(false);
+  const [uploadProgress,setUploadProgress]=useState(0);
+  const [largeFile,setLargeFile]=useState('')
 
+  
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const filePickerRef = useRef<HTMLInputElement>(null);
 
   const db = getFirestore(app)
@@ -38,8 +44,15 @@ function Header() {
   const file = e.target.files?.[0]
 
   if(file){ 
+    setLargeFile('')
+    if (file.size > MAX_FILE_SIZE) {
+      setLargeFile('File size exceeds the maximum allowed size!! 😞');
+      return;
+    }
     setSelectedFile(file);
-    setImageFileUrl(URL.createObjectURL(file))   
+    setImageFileUrl(URL.createObjectURL(file))
+    const isVideo = /\.(mp4|webm|ogg)$/i.test(file.name);
+      setIsVideo(isVideo);   
   }
   }
 
@@ -56,12 +69,14 @@ function Header() {
     const storage= getStorage(app) ;
     const fileName = new Date().getTime()+'-'+selectedFile?.name;
     const storageRef = ref(storage,fileName);
-    const uploadTask = uploadBytesResumable(storageRef,selectedFile as Blob)
+    const uploadTask = uploadBytesResumable(storageRef,selectedFile as Blob);
+   
     uploadTask.on(
       'state_changed',
       (snapshoot)=>{
       const progress = 
     (snapshoot.bytesTransferred/snapshoot.totalBytes)*100;
+    setUploadProgress(progress)
      console.log('upload is '+progress + '% done')
       },
       (error)=>{
@@ -103,6 +118,7 @@ location.reload();
     
   return (  
     <div className='shadow-sm border-b sticky top-0 bg-white z-30 p-3'>
+     
      <div className='flex justify-between items-center max-w-6xl mx-auto'>
         <Link href='/'> 
         <Image
@@ -134,11 +150,25 @@ location.reload();
       isOpen && (
         
 
-        <Modal isOpen={isOpen} onRequestClose={()=>setIsOpen(false)} ariaHideApp={false} className='w-[60%] p-6 absolute top-36 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md   '
+        <Modal isOpen={isOpen} onRequestClose={()=>{setSelectedFile(null);setIsOpen(false)}} ariaHideApp={false} className='w-[60%] p-6 absolute top-36 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md   '
         >
+           {largeFile && <div className='w-1/4 h-12 border border-3 text-red-600 text-md p-4 flex items-center justify-center'>{largeFile}</div>}
+          {selectedFile && (<div className='p-8 rounded-full bg-slate-800 text-white text-md  w-full sm:w-1/4 h-10 flex items-center justify-center'>{` ${Math.round(uploadProgress)}% done`}</div>)}
           <div className='flex flex-col justify-center items-center h-[100%' >
             {selectedFile?(
-              <img src={imageFileUrl} alt="selected file" className={`w-full max-h-[390px]  cursor-pointer ${imageFileUploading ? 'animate-pulse':''}`} onClick={()=>setSelectedFile(null)} />
+
+              <div>
+              {isVideo ? (
+            <video controls className='object-cover w-full' style={{ maxWidth: '100%', maxHeight: '390px' }}>
+              <source src={imageFileUrl} type='video/mp4' className={`w-full max-h-[390px]  cursor-pointer ${imageFileUploading ? 'animate-pulse bg-slate-400':''}`} onClick={()=>setSelectedFile(null)} />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <img src={imageFileUrl} alt="selected file" className={`w-full max-h-[390px]  cursor-pointer ${imageFileUploading ? 'animate-pulse':''}`} onClick={()=>setSelectedFile(null)} />
+          )}
+                  
+              </div>
+              
             ):(
               <HiCamera onClick={()=>filePickerRef?.current?.click()} className='text-5xl text-gray-400 cursor-pointer'/>
             )}
@@ -146,7 +176,7 @@ location.reload();
          
 
 
-           <input type="file" hidden ref={filePickerRef} name="" id="" accept='image/*' onChange={addImageToPost} />
+           <input type="file" hidden ref={filePickerRef} name="" id="" accept='image/*, video/*' onChange={addImageToPost} />
           </div>
           {/* <textarea 
               onChange={(e)=>setCaption(e?.target?.value)} 
@@ -174,10 +204,11 @@ location.reload();
             className='w-full h-80 overflow-auto border text-center focus:ring-0 outline-none resize-none'
           />
            
-         <button onClick={handleSubmit} disabled ={
-          !selectedFile || caption.trim()==='' || postUploading || imageFileUploading
-         } className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>Upload post</button>
-         <AiOutlineClose className='cursor-pointer absolute top-2 right-2 hover:text-red-600 transition duration-300' onClick={()=>setIsOpen(false)}/>
+           <button onClick={handleSubmit} disabled={!caption.trim() || postUploading || imageFileUploading} className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>
+            {imageFileUploading ? 'Uploading...' : 'Upload post'}
+          </button>
+
+         <AiOutlineClose className='cursor-pointer absolute top-2 right-2 hover:text-red-600 transition duration-300' onClick={()=>{ setSelectedFile(null);setIsOpen(false)}}/>
         </Modal>
       )
      }

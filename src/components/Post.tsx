@@ -16,6 +16,11 @@ profileImg:string,
 }
 
 function Post({post}:{post:PostObject}) {
+  const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
+
+
+  console.log("is video",isVideo,post.caption);
+  console.log("post url",post.image,post.caption)
   return (
     <div className='bg-white my-7 border rounded-md'>
         <div className='flex items-center p-5 border-b border-gray-500'>
@@ -23,8 +28,14 @@ function Post({post}:{post:PostObject}) {
       <p className='flex-1 font-bold'>{post.username}</p>
       <HiOutlineDotsVertical className='cursor-pointer h-5'/>
         </div>
-      
-        <img  src={post.image} alt={post.caption} className='object-cover w-full'/>
+        {isVideo ? (
+        <video controls className='object-cover w-full' style={{  maxWidth: '100%',height:'780px', maxHeight: '800px' }}>
+          <source src={post.image} type='video/mp4' />
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img src={post.image} alt={post.caption} className='object-cover w-full' />
+      )}
         <LikeSection id={post.id}/>
        
         <div className='p-5 overflow-scroll'>
