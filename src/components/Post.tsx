@@ -27,10 +27,10 @@ function Post({post}:{post:PostObject}) {
         <img  src={post.image} alt={post.caption} className='object-cover w-full'/>
         <LikeSection id={post.id}/>
        
-        <p className='p-5 overflow-scroll'>
+        <div className='p-5 overflow-scroll'>
             <span className='font-bold mr-2'>{post.username}</span>
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
-        </p>
+        </div>
     
       
     </div>
