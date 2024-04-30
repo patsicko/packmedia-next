@@ -44,7 +44,7 @@ function LikeSection({id}:{id:any}) {
   return (
     <div>
      {session && 
-     <div className='flex border-t border-gray-100 px-4 pt-4'>
+     <div className='flex  border-gray-100 px-4 '>
         <div className='flex items-center gap-2'>
       {
 

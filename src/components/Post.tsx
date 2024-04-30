@@ -1,8 +1,19 @@
+'use client'
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
-import { HiOutlineDotsVertical } from 'react-icons/hi';
+import { HiOutlineDotsVertical, HiOutlineShare } from 'react-icons/hi';
 import LikeSection from './LikeSection';
 import CommentSection from './CommentSection';
+import {
+  LinkedinShareButton,
+  LinkedinIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+} from 'next-share'
 
 export interface PostObject{
 id:string,
@@ -19,7 +30,7 @@ profileImg:string,
 function Post({post}:{post:PostObject}) {
   const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
 
-
+ 
   console.log("is video",isVideo,post.caption);
   console.log("post url",post.image,post.caption)
   return (
@@ -37,14 +48,46 @@ function Post({post}:{post:PostObject}) {
       ) : (
         <img src={post.image} alt={post.caption} className='object-cover w-full' />
       )}
-        <LikeSection id={post.id}/>
+      <div className='flex pt-4 px-4'>
+      <LikeSection id={post.id}/>
+        <div className='px-2 text-gray-500 text-md flex items-center justify-center'>Share to</div>
+        
+        <LinkedinShareButton url={'http://localhost:3000'} >
+      <LinkedinIcon size={32} round />
+      </LinkedinShareButton>
        
-        <div className='p-5 overflow-scroll'>
+      <WhatsappShareButton
+      url={'http://localhost:3000'}
+      title={'packmedia'}
+      separator=":: "
+      >
+      <WhatsappIcon size={32} round />
+    </WhatsappShareButton>
+
+    <FacebookShareButton
+      url={'http://localhost:3000'}
+      quote={''}
+      hashtag={'#packmedia'}
+    >
+      <FacebookIcon size={32} round />
+    </FacebookShareButton>
+
+
+    <TwitterShareButton
+      url={'http://localhost:3000'}
+      title={'packmedia'}
+    >
+      <TwitterIcon size={32} round />
+    </TwitterShareButton>
+</div>
+        <div className='p-5 overflow-scroll w-[100%] p-x-4'>
             <span className='font-bold mr-2'>{post.username}</span>
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
         </div>
     
       <CommentSection post={post} id={post.id}/>
+     
+      
     </div>
   )
 }

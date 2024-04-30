@@ -8,14 +8,17 @@ import ReactModal from 'react-modal';
 import CommentListModal from './CommentListModal';
 import { PostObject } from './Post';
 
+
+
 function CommentSection({post,id}:{post:PostObject,id:any}) {
     const {data:session}= useSession();
     const [comment,setComment] = useState('');
     const [comments,setComments] = useState<any>([])
     const db = getFirestore(app);
     const [showModal, setShowModal] = useState(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-
+  
     const handleSubmit=async(e:React.FormEvent<HTMLFormElement>)=>{
         const commentPost = comment
         e.preventDefault();
@@ -57,7 +60,7 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
 
       {
         session && session.user?.image &&(
-            <form onSubmit={handleSubmit} className='flex items-center p-4 gap-2'>
+            <form onSubmit={handleSubmit} className='flex items-center p-4 gap-2 w-[100%]'>
              <img src ={session?.user?.image}
              alt="user image"
              className='h-10 w-10 rounded-full border p-[4px] object-cover'
@@ -68,9 +71,13 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
              placeholder='add comment...'
              className='border-none flex-1 focus:ring-0 outline-none'
              />
+           
+
              <button
              disabled={!comment.trim()}
-              type="submit" className=' text-blue-400 disabled:cursor-not-allowed disabled:text-gray-400'>Post</button>
+              type="submit" className=' text-blue-400 disabled:cursor-not-allowed disabled:text-gray-400 w-[100%]'>Post</button>
+              
+
             </form>
         )
       }
