@@ -23,6 +23,8 @@ function Header() {
 
   const {data:session} = useSession()
 
+  console.log("session of loged user", session?.user?.image)
+
 
   const [isOpen, setIsOpen]=useState(false)
   const [selectedFile,setSelectedFile]= useState<File|null>(null)
@@ -137,6 +139,7 @@ location.reload();
       <IoAddCircleOutline onClick={(e)=>setIsOpen(true)} className='text-2xl cursor-pointer transform hover:scale-125 transition duration-300 hover:text-red-600' />
       {
       session.user && session.user.image?(
+        
         <img src={session.user.image} alt="profile image" width={40} height={40} className='rounded-full cursor-pointer' onClick={()=>signOut()}/>
       ):<Image src='/avatar.png' height={10} width={10} alt="avatar"/>
      }</div>
