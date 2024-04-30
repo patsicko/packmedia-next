@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import LikeSection from './LikeSection';
+import CommentSection from './CommentSection';
 
 export interface PostObject{
 id:string,
@@ -29,7 +30,7 @@ function Post({post}:{post:PostObject}) {
       <HiOutlineDotsVertical className='cursor-pointer h-5'/>
         </div>
         {isVideo ? (
-        <video controls className='object-cover w-full' style={{  maxWidth: '100%',height:'780px', maxHeight: '800px' }}>
+        <video controls className='object-cover w-full' style={{  maxWidth: '100%',height:'880px', maxHeight: '900px' }}>
           <source src={post.image} type='video/mp4' />
           Your browser does not support the video tag.
         </video>
@@ -43,7 +44,7 @@ function Post({post}:{post:PostObject}) {
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
         </div>
     
-      
+      <CommentSection post={post} id={post.id}/>
     </div>
   )
 }
