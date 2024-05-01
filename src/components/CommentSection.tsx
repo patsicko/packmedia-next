@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { addDoc, collection, getFirestore, onSnapshot, query, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, getFirestore, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { CustomUser } from '@/app/api/auth/[...nextauth]/route';
 import { app } from '@/firebase';
 import ReactModal from 'react-modal';
@@ -32,7 +32,7 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
         setComment('')
       }
   useEffect(()=>{
-    onSnapshot(query(collection(db,'posts',id,'comments')),(snapshot)=>{
+    onSnapshot(query(collection(db,'posts',id,'comments'),orderBy('timestamp','desc')),(snapshot)=>{
     setComments(snapshot.docs)
     })
   },[db])

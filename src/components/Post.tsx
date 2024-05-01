@@ -4,6 +4,7 @@ import React from 'react';
 import { HiOutlineDotsVertical, HiOutlineShare } from 'react-icons/hi';
 import LikeSection from './LikeSection';
 import CommentSection from './CommentSection';
+import dotenv from "dotenv"
 import {
   LinkedinShareButton,
   LinkedinIcon,
@@ -29,7 +30,9 @@ profileImg:string,
 
 function Post({post}:{post:PostObject}) {
   const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
-
+  dotenv.config()
+const URL=process.env.NEXT_PUBLIC_APP_URL || ''
+console.log("URL",URL)
  
   console.log("is video",isVideo,post.caption);
   console.log("post url",post.image,post.caption)
@@ -52,12 +55,12 @@ function Post({post}:{post:PostObject}) {
       <LikeSection id={post.id}/>
         <div className='px-2 text-gray-500 text-md flex items-center justify-center'>Share to</div>
         
-        <LinkedinShareButton url={'http://localhost:3000'} >
+        <LinkedinShareButton url={URL} >
       <LinkedinIcon size={32} round />
       </LinkedinShareButton>
        
       <WhatsappShareButton
-      url={'http://localhost:3000'}
+      url={URL}
       title={'packmedia'}
       separator=":: "
       >
@@ -65,16 +68,14 @@ function Post({post}:{post:PostObject}) {
     </WhatsappShareButton>
 
     <FacebookShareButton
-      url={'http://localhost:3000'}
+      url={URL}
       quote={''}
       hashtag={'#packmedia'}
     >
       <FacebookIcon size={32} round />
     </FacebookShareButton>
-
-
     <TwitterShareButton
-      url={'http://localhost:3000'}
+      url={URL}
       title={'packmedia'}
     >
       <TwitterIcon size={32} round />
@@ -83,11 +84,8 @@ function Post({post}:{post:PostObject}) {
         <div className='p-5 overflow-scroll w-[100%] p-x-4'>
             <span className='font-bold mr-2'>{post.username}</span>
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
-        </div>
-    
-      <CommentSection post={post} id={post.id}/>
-     
-      
+        </div> 
+      <CommentSection post={post} id={post.id}/>     
     </div>
   )
 }

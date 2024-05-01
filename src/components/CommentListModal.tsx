@@ -48,10 +48,10 @@ const CommentListModal: React.FC<CommentListModalProps> = ({ post, comments, onC
                         <span className='font-bold text-gray-700'>{comment.data().username}{' '} </span>
                         </div>
                        
-                        <p  className='p-2'>
+                        <p  className='p-2 text-md'>
                        {comment.data().comment}
                         </p>
-                        <Moment fromNow  className='text-xs text-gray-400'>
+                        <Moment fromNow  className='text-md font-bold text-gray-400'>
                             {comment.data().timestamp?.toDate()}
                         </Moment>
                     </div>
