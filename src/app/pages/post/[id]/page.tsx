@@ -1,9 +1,9 @@
 import React from 'react'
 
-function page() {
+const page: React.FC<{ params: { id: string } }> = ({ params: { id } }) => {
   return (
     <div>
-      
+      {id}
     </div>
   )
 }
