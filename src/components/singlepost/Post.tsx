@@ -2,7 +2,8 @@
 import { Timestamp } from 'firebase/firestore';
 import React from 'react';
 import { HiOutlineDotsVertical, HiOutlineShare } from 'react-icons/hi';
-
+import LikeSection from '../LikeSection';
+import CommentSection from '../CommentSection';
 import dotenv from "dotenv"
 import {
   LinkedinShareButton,
@@ -27,16 +28,17 @@ profileImg:string,
 
 }
 
-function Post({post}:{post:PostObject}) {
+function Post({post,id}:{post:PostObject,id:string}) {
   const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
   dotenv.config()
-const URL='https://packmedia-next.vercel.app/'
+const URL='https://packmedia-next.vercel.app/pages/post/'+id
 console.log("URL",URL)
  
   console.log("is video",isVideo,post.caption);
   console.log("post url",post.image,post.caption)
   return (
     <div className='bg-white my-7 border rounded-md'>
+      
         <div className='flex items-center p-5 border-b border-gray-500'>
       <img  src={post.profileImg} alt={post.username} className='h-12 rounded-full object-cover border p-1 mr-3'/>
       <p className='flex-1 font-bold'>{post.username}</p>
@@ -51,10 +53,10 @@ console.log("URL",URL)
         <img src={post.image} alt={post.caption} className='object-cover w-full' />
       )}
       <div className='flex pt-4 px-4'>
-     
+      <LikeSection id={post.id}/>
         <div className='px-2 text-gray-500 text-md flex items-center justify-center'>Share to</div>
         
-        <LinkedinShareButton url={'https://packmedia-next.vercel.app/'} >
+        <LinkedinShareButton url={'https://packmedia-next.vercel.app/pages/post/'+id} >
       <LinkedinIcon size={32} round />
       </LinkedinShareButton>
        
@@ -67,7 +69,7 @@ console.log("URL",URL)
     </WhatsappShareButton>
 
     <FacebookShareButton
-      url={'https://packmedia-next.vercel.app/'}
+      url={'https://packmedia-next.vercel.app/pages/post/'+id}
       quote={''}
       hashtag={'#packmedia'}
     >
@@ -84,7 +86,7 @@ console.log("URL",URL)
             <span className='font-bold mr-2'>{post.username}</span>
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
         </div> 
-        
+      <CommentSection post={post} id={post.id}/>     
     </div>
   )
 }

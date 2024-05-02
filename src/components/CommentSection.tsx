@@ -42,7 +42,7 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
 
   return (
     <div>
-    {
+    {/* {
         comments.length > 0 ? (
             <div>
             <button onClick={openModal} className='bg-white border-none outline-none p-2'>
@@ -54,9 +54,10 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
         </div>
          
         ):(
-            <div>{comments.length} comment</div>
+            
         )
-    }
+    } */}
+    <div>{comments.length} comment</div>
 
       {
         session && session.user?.image &&(

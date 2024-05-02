@@ -12,6 +12,7 @@ import { app } from '@/firebase'
 import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore'
 import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation'
 
 // import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -19,6 +20,7 @@ const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 
 function Header() {
+  const route =useRouter()
   const [isQuillLoaded, setIsQuillLoaded] = useState(false);
 
   useEffect(() => {
@@ -119,7 +121,8 @@ await addDoc(collection(db,'posts'),{
 });
 setPostUploading(false);
 setIsOpen(false);
-location.reload();
+ route.push('/');
+ route.refresh()
 
   }
     
