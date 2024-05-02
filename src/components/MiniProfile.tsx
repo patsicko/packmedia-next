@@ -10,10 +10,11 @@ function MiniProfile() {
 
     const handleSignIn = () => {
         signIn();
+        
     };
 
     const handleSignOut = () => {
-        signOut();
+        signOut({redirect:false});
     };
 
   return (

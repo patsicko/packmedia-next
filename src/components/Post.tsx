@@ -31,7 +31,7 @@ profileImg:string,
 function Post({post}:{post:PostObject}) {
   const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
   dotenv.config()
-const URL=process.env.NEXT_PUBLIC_APP_URL || ''
+const URL='https://packmedia-next.vercel.app/'
 console.log("URL",URL)
  
   console.log("is video",isVideo,post.caption);
@@ -55,7 +55,7 @@ console.log("URL",URL)
       <LikeSection id={post.id}/>
         <div className='px-2 text-gray-500 text-md flex items-center justify-center'>Share to</div>
         
-        <LinkedinShareButton url={URL} >
+        <LinkedinShareButton url={'https://packmedia-next.vercel.app/'} >
       <LinkedinIcon size={32} round />
       </LinkedinShareButton>
        
@@ -68,7 +68,7 @@ console.log("URL",URL)
     </WhatsappShareButton>
 
     <FacebookShareButton
-      url={URL}
+      url={'https://packmedia-next.vercel.app/'}
       quote={''}
       hashtag={'#packmedia'}
     >
