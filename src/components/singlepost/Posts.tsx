@@ -34,7 +34,7 @@ const Page: React.FC<PropsType> = ({ id }) => {
         };
 
         fetchData();
-    }, [Id]);
+    }, [id]);
 
     return (
         <div>
