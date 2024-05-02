@@ -18,7 +18,7 @@ const Page: React.FC<PropsType> = ({ id }) => {
         const fetchData = async () => {
             try {
                 const db = getFirestore(app);
-                const q = query(collection(db,'posts',id), orderBy('timestamp', 'desc'));
+                const q = query(collection(db,'posts',id));
                 const querySnapshot = await getDocs(q);
 
                 let postData: PostType[] = [];
