@@ -11,12 +11,19 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '@/firebase'
 import { addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore'
 import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
-import { redirect } from 'next/dist/server/api-utils'
+import dynamic from 'next/dynamic';
 
-
+// import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 
 function Header() {
+  const [isQuillLoaded, setIsQuillLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsQuillLoaded(true); // Set flag to indicate Quill.js is loaded on the client
+  }, []);
 
   const {data:session} = useSession()
 
@@ -112,7 +119,7 @@ await addDoc(collection(db,'posts'),{
 });
 setPostUploading(false);
 setIsOpen(false);
-// location.reload();
+location.reload();
 
   }
     
@@ -179,14 +186,32 @@ setIsOpen(false);
 
            <input type="file" hidden ref={filePickerRef} name="" id="" accept='image/*, video/*' onChange={addImageToPost} />
           </div>
-          <textarea 
+          {/* <textarea 
               onChange={(e)=>setCaption(e?.target?.value)} 
               maxLength={1500} 
               placeholder='Please enter your caption' 
               className='m-4 border-none text-center w-full focus:ring-0 outline-none resize-none'
               rows={5}
             />
-       
+        */}
+
+          <ReactQuill
+            value={caption}
+            onChange={(value) => setCaption(value)}
+            placeholder='Please enter your caption, including text explanations and code snippets'
+            theme='snow'
+            modules={{
+              toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+                ['link', 'image'],
+                ['code-block']
+              ],
+            }}
+            className='w-full h-80 overflow-auto border text-center focus:ring-0 outline-none resize-none'
+          />
+           
            <button onClick={handleSubmit} disabled={!caption.trim() || postUploading || imageFileUploading} className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>
             {imageFileUploading ? 'Uploading...' : 'Upload post'}
           </button>
