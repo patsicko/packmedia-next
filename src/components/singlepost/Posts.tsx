@@ -1,7 +1,7 @@
-"use client"
+
 import { app } from '@/firebase';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 type Post = {
   id:string;
@@ -13,17 +13,17 @@ type Post = {
 }
 
 type Props = {
-  Id: string;
+  id: string;
 }
 
-const Page: React.FC<Props> = ({ Id }) => {
-  const [data, setData] = useState<Post[]>([]);
+const Page: React.FC<Props> = ({ id }) => {
+  const [data, setData] = React.useState<Post[]>([]);
   
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchData = async () => {
       try {
         const db = getFirestore(app);
-        const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'), where('id', '==', Id));
+        const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'), where('id', '==', id));
         const querySnapshot = await getDocs(q);
   
         const postData: Post[] = [];
@@ -39,7 +39,7 @@ const Page: React.FC<Props> = ({ Id }) => {
     };
 
     fetchData();
-  }, [Id]); // Add id as a dependency to useEffect
+  }, [id]); // Add id as a dependency to useEffect
   
   return (
     <div>
