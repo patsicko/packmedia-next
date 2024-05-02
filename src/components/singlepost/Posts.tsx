@@ -1,54 +1,56 @@
 "use client"
-
 import { app } from '@/firebase';
-import { collection, doc, getDoc, getFirestore, where } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
 
 type PostType = {
-  id: string;
-};
+    id: string;
+}
 
 type PropsType = {
-  id: string;
-};
+    id: string;
+}
 
 const Page: React.FC<PropsType> = ({ id }) => {
-  const [data, setData] = useState<PostType | null>(null);
+    const [data, setData] = useState<PostType[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const db = getFirestore(app);
-        const postRef = doc(collection(db, 'posts'), id); // Create a reference to the specific post
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const db = getFirestore(app);
+                const q = query(collection(db,'posts'), where('id', '==', id), orderBy('timestamp', 'desc'));
+                const querySnapshot = await getDocs(q);
 
-        const querySnapshot = await getDoc(postRef);
+                let postData: PostType[] = [];
 
-        if (querySnapshot.exists) {
-          const postData = { id: querySnapshot.id, ...querySnapshot.data() } as PostType; // Ensure type safety
-          setData(postData);
-        } else {
-          console.warn(`Post with ID "${id}" not found.`); // Informative message
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+                querySnapshot.forEach((doc) => {
+                    postData.push({id: doc.id, ...doc.data()});
+                });
 
-    fetchData();
-  }, [id]);
+                setData(postData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-  return (
-    <div>
-      {id} {/* Display the ID for reference */}
-      {data ? (
-        <div key={data.id}>
-          {/* Access and display post properties here (e.g., title, content) */}
+        fetchData();
+    }, [id]);
+
+    return (
+        <div>
+          {id}
+          {data.length === 0 ?(
+<div>{data.length}</div>
+          ):(
+            data.map((post: PostType) => (
+              <div key={post.id}>
+                  {post.id}
+              </div>
+          ))
+          )}
+          
         </div>
-      ) : (
-        <div>Post not found.</div>
-      )}
-    </div>
-  );
-};
+    )
+}
 
 export default Page;
