@@ -12,29 +12,19 @@ type PropsType = {
 }
 
 const Page: React.FC<PropsType> = ({ Id }) => {
-    const [data, setData] = useState<PostType[]>([]);
+   
+const db = getFirestore(app);
+const q = query(collection(db,'posts'),orderBy('timestamp','desc'));
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const db = getFirestore(app);
-                const q = query(collection(db,'posts'), orderBy('timestamp','desc'), where('id', '==', Id));
-                const querySnapshot = await getDocs(q);
+const querySnapshoot =  await getDocs(q);
 
-                let postData: PostType[] = [];
+let data:any = [];
 
-                querySnapshot.forEach((doc) => {
-                    postData.push({id: doc.id, ...doc.data()});
-                });
-
-                setData(postData);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-
-        fetchData();
-    }, [Id]);
+querySnapshoot.forEach((doc)=>{
+    
+    data.push({id:doc.id, ...doc.data()});
+      
+})
 
     return (
         <div>
