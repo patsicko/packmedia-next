@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { app } from '@/firebase';
 import { collection, getDocs, getFirestore, orderBy, query } from 'firebase/firestore'
 import React from 'react'
-import Post, { PostObject } from './Post';
+import Post, { PostObject } from '@/components/Post';
 
 async function Posts() {
 
