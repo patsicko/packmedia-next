@@ -2,7 +2,7 @@
 import { app } from '@/firebase';
 import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
 import React from 'react'
-import Post, { PostObject } from '@/components/Post';
+import Post, { PostObject } from '@/components/singlepost/Post';
 
 type propsType = {
     Id:string;
