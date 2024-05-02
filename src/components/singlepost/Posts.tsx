@@ -8,10 +8,10 @@ type PostType = {
 }
 
 type PropsType = {
-    Id: string;
+    id: string;
 }
 
-const Page: React.FC<PropsType> = ({ Id }) => {
+const Page: React.FC<PropsType> = ({ id }) => {
     const [data, setData] = useState<PostType[]>([]);
 
     useEffect(() => {
@@ -38,7 +38,7 @@ const Page: React.FC<PropsType> = ({ Id }) => {
 
     return (
         <div>
-          {Id}
+          {id}
             {data.map((post: PostType) => (
                 <div key={post.id}>
                     {post.id}
