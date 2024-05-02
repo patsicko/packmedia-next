@@ -39,11 +39,16 @@ const Page: React.FC<PropsType> = ({ id }) => {
     return (
         <div>
           {id}
-            {data.map((post: PostType) => (
-                <div key={post.id}>
-                    {post.id}
-                </div>
-            ))}
+          {data.length === 0 ?(
+<div>{data.length}</div>
+          ):(
+            data.map((post: PostType) => (
+              <div key={post.id}>
+                  {post.id}
+              </div>
+          ))
+          )}
+          
         </div>
     )
 }
