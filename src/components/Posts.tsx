@@ -22,9 +22,8 @@ querySnapshoot.forEach((doc)=>{
   return (
     <div>
       {data.map((post:PostObject)=>(
-<Link href={`/pages/post/${post.id}`}  key={post.id}>
         <Post key={post.id} post = {post}/>
-</Link>
+
       ))}
 
    

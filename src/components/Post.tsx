@@ -1,10 +1,11 @@
 'use client'
 import { Timestamp } from 'firebase/firestore';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiOutlineDotsVertical, HiOutlineShare } from 'react-icons/hi';
 import LikeSection from './LikeSection';
 import CommentSection from './CommentSection';
 import dotenv from "dotenv"
+import Link from 'next/link'
 import {
   LinkedinShareButton,
   LinkedinIcon,
@@ -29,21 +30,23 @@ profileImg:string,
 }
 
 function Post({post}:{post:PostObject}) {
+  let key=0
   const isVideo = /\.mp4|\.webm|\.ogg/i.test(post.image);
   dotenv.config()
 const URL='https://packmedia-next.vercel.app/'
-console.log("URL",URL)
+
  
-  console.log("is video",isVideo,post.caption);
-  console.log("post url",post.image,post.caption)
+
   return (
-    <div className='bg-white my-7 border rounded-md'>
+    <div className='bg-white my-7 border pb-4 rounded-md'>
     
         <div className='flex items-center p-5 border-b border-gray-500'>
       <img  src={post.profileImg} alt={post.username} className='h-12 rounded-full object-cover border p-1 mr-3'/>
       <p className='flex-1 font-bold'>{post.username}</p>
       <HiOutlineDotsVertical className='cursor-pointer h-5'/>
         </div>
+
+        <Link href={`/pages/post/${post.id}`}  key={key++}>
         {isVideo ? (
         <video controls className='object-cover w-full' style={{  maxWidth: '100%',height:'880px', maxHeight: '900px' }}>
           <source src={post.image} type='video/mp4' />
@@ -52,7 +55,9 @@ console.log("URL",URL)
       ) : (
         <img src={post.image} alt={post.caption} className='object-cover w-full' />
       )}
-      <div className='flex pt-4 px-4'>
+        </Link>
+
+      <div className='flex pt-4 px-4 border pb-4'>
       <LikeSection id={post.id}/>
         <div className='px-2 text-gray-500 text-md flex items-center justify-center'>Share to</div>
         
@@ -82,11 +87,19 @@ console.log("URL",URL)
       <TwitterIcon size={32} round />
     </TwitterShareButton>
 </div>
-        <div className='p-5 overflow-scroll w-[100%] p-x-4'>
+
+
+        <div className='p-5  w-[100%] p-x-4'>
             <span className='font-bold mr-2'>{post.username}</span>
+            <Link href={`/pages/post/${post.id}`}  key={key++}>
             <div dangerouslySetInnerHTML={{ __html: post.caption }} />
+            </Link>
+            
         </div> 
-      <CommentSection post={post} id={post.id}/>     
+        
+        <CommentSection post={post} id={post.id}/>  
+        
+         
     </div>
   )
 }

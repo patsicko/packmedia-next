@@ -14,7 +14,7 @@ import { CustomUser } from '@/app/api/auth/[...nextauth]/route'
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation'
 
-// import ReactQuill from 'react-quill';
+
 import 'react-quill/dist/quill.snow.css';
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -24,7 +24,7 @@ function Header() {
   const [isQuillLoaded, setIsQuillLoaded] = useState(false);
 
   useEffect(() => {
-    setIsQuillLoaded(true); // Set flag to indicate Quill.js is loaded on the client
+    setIsQuillLoaded(true); 
   }, []);
 
   const {data:session} = useSession()
@@ -127,7 +127,7 @@ setIsOpen(false);
   }
     
   return (  
-    <div className='shadow-sm border-b sticky top-0 bg-white z-30 p-3'>
+    <div className='shadow-sm   border-b sticky top-0 bg-white z-30 p-3'>
      
      <div className='flex justify-between items-center max-w-6xl mx-auto'>
         <Link href='/'> 
@@ -137,18 +137,19 @@ setIsOpen(false);
         height={98}
         alt='pack logo'
         priority
-        className='rounded-md '
+        className='rounded-md mx-4 '
         />
          </Link>
 
-         <input type="text" placeholder='search' className='bg-gray-50 border border-gray-200 rounded text-sm w-full py-2 px-4 max-w-[210px]' />
+         <input type="text" placeholder='search' className='bg-gray-50 border border-gray-200 rounded text-sm  py-2 px-4 max-w-[210px]' />
      {session ? (
       <div className='flex gap-2 items-center'>
-      <IoAddCircleOutline onClick={(e)=>setIsOpen(true)} className='text-2xl cursor-pointer transform hover:scale-125 transition duration-300 hover:text-red-600' />
+      <IoAddCircleOutline onClick={(e)=>setIsOpen(true)} className='text-4xl cursor-pointer transform hover:scale-125 transition duration-300 hover:text-red-600' />
       {
-      session.user && session.user.image?(
+      session.user && session.user.image?(<div className='flex justify-center items-center gap-3'>
         
-        <img src={session.user.image} alt="profile image" width={40} height={40} className='rounded-full cursor-pointer' onClick={()=>signOut()}/>
+        <img src={session.user.image} alt="profile image" width={40} height={40} className='rounded-full cursor-pointer' /> <button type="button" onClick={()=>signOut()}>Logout</button>
+        </div>
       ):<Image src='/avatar.png' height={10} width={10} alt="avatar"/>
      }</div>
      ):

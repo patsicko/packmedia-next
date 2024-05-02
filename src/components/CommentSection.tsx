@@ -7,6 +7,7 @@ import { app } from '@/firebase';
 import ReactModal from 'react-modal';
 import CommentListModal from './CommentListModal';
 import { PostObject } from './Post';
+import Link from 'next/link'
 
 
 
@@ -41,7 +42,7 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
   const closeModal = () => setShowModal(false);
 
   return (
-    <div>
+    <div className='ml-4'>
     {/* {
         comments.length > 0 ? (
             <div>
@@ -57,7 +58,16 @@ function CommentSection({post,id}:{post:PostObject,id:any}) {
             
         )
     } */}
-    <div>{comments.length} comment</div>
+
+<Link href={`/pages/post/${post.id}`}  key={post.id}>
+   { comments.length > 0 ? (
+      <div>View {comments.length === 1 ? '1 comment' : `all  ${comments.length} comments`}</div>
+    ):(
+      <div>0 Comment</div>
+    )
+   }
+   </Link>
+    
 
       {
         session && session.user?.image &&(

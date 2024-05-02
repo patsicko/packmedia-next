@@ -40,7 +40,7 @@ const CommentListModal: React.FC<CommentListModalProps> = ({ id }) => {
                         <p  className='p-2 text-md w-full'>
                        {comment.data().comment}
                         </p>
-                        <Moment fromNow  className='text-md font-bold text-gray-400'>
+                        <Moment fromNow  className='text-md font-bold text-gray-400 ml-2'>
                             {comment.data().timestamp?.toDate()}
                         </Moment>
                     </div>
