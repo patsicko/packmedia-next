@@ -24,9 +24,11 @@ querySnapshoot.forEach((doc)=>{
 
   return (
     <div>
-      {data.map((post:PostObject)=>(
-        <Post key={post.id} post = {post}/>
+      {data.map((post)=>(
+        <div key={post.id} >
+          {post.id} 
 
+</div>
       ))}
 
    
