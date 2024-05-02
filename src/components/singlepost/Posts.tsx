@@ -12,36 +12,32 @@ type PropsType = {
 }
 
 const Page: React.FC<PropsType> = ({ id }) => {
-  const [data, setData] = useState<PostType[]>([]);
-  const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<PostType[]>([]);
 
-  useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const db = getFirestore(app);
-              const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'), where('id', '==', id)); // changed 'Id' to 'id'
-              const querySnapshot = await getDocs(q);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const db = getFirestore(app);
+                const q = query(collection(db,'posts'), where('id', '==', id));
+                const querySnapshot = await getDocs(q);
 
-              let postData: PostType[] = [];
+                let postData: PostType[] = [];
 
-              querySnapshot.forEach((doc) => {
-                  postData.push({ id: doc.id, ...doc.data() });
-              });
+                querySnapshot.forEach((doc) => {
+                    postData.push({id: doc.id, ...doc.data()});
+                });
 
-              setData(postData);
-              setError(null); // Reset error if successful
-          } catch (error) {
-              console.error("Error fetching data:", error);
-              setError("Error fetching data: " + error.message);
-          }
-      };
+                setData(postData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-      fetchData();
-  }, [id]); // changed 'Id' to 'id'
+        fetchData();
+    }, [id]);
 
     return (
         <div>
-            {error && <div>Error: {error}</div>}
           {id}
           {data.length === 0 ?(
 <div>{data.length}</div>
