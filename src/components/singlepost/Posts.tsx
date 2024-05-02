@@ -38,6 +38,9 @@ const Page: React.FC<PropsType> = ({ Id }) => {
 
     return (
         <div>
+          <h2>{Id}</h2>
+       
+
             {data.map((post: PostType) => (
                 <div key={post.id}>
                     {post.id}
