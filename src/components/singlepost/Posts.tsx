@@ -1,65 +1,51 @@
+"use client"
 import { app } from '@/firebase';
-import { collection, getDocs, getFirestore, orderBy, query, where , Timestamp } from 'firebase/firestore';
-import React from 'react';
+import { collection, getDocs, getFirestore, orderBy, query, where } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
 
-type Post = {
-  id: string;
-  image: string;
-  caption: string;
-  username: string;
-  timestamp: Timestamp;
-  profileImg: string;
+type PostType = {
+    id: string;
 }
 
-type Props = {
-  id: string;
+type PropsType = {
+    Id: string;
 }
 
-class Page extends React.Component<Props> {
-  state = {
-    data: [] as Post[]
-  };
+const Page: React.FC<PropsType> = ({ Id }) => {
+    const [data, setData] = useState<PostType[]>([]);
 
-  componentDidMount() {
-    this.fetchData();
-  }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const db = getFirestore(app);
+                const q = query(collection(db,'posts'), orderBy('timestamp','desc'), where('id', '==', Id));
+                const querySnapshot = await getDocs(q);
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.id !== this.props.id) {
-      this.fetchData();
-    }
-  }
+                let postData: PostType[] = [];
 
-  fetchData = async () => {
-    try {
-      const db = getFirestore(app);
-      const q = query(collection(db, 'posts'), orderBy('timestamp', 'desc'), where('id', '==', this.props.id));
-      const querySnapshot = await getDocs(q);
+                querySnapshot.forEach((doc) => {
+                    postData.push({id: doc.id, ...doc.data()});
+                });
 
-      const postData: Post[] = [];
+                setData(postData);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-      querySnapshot.forEach((doc) => {
-        postData.push({ id: doc.id, ...doc.data() } as Post);
-      });
+        fetchData();
+    }, [Id]);
 
-      this.setState({ data: postData });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  render() {
     return (
-      <div>
-        {this.state.data.map((post) => (
-          <div key={post.id}>
-            <div>{post.id}</div>
-            <span className='font-bold mr-2'>{post.username}</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
+        <div>
+          {Id}
+            {data.map((post: PostType) => (
+                <div key={post.id}>
+                    {post.id}
+                </div>
+            ))}
+        </div>
+    )
 }
 
 export default Page;
