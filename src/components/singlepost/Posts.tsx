@@ -39,7 +39,7 @@ const Page: React.FC<Props> = ({ Id }) => {
     };
 
     fetchData();
-  }, [id]); // Add id as a dependency to useEffect
+  }, [Id]); // Add id as a dependency to useEffect
   
   return (
     <div>
