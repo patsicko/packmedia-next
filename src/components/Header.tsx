@@ -158,7 +158,7 @@ location.reload();
       isOpen && (
         
 
-        <Modal isOpen={isOpen} onRequestClose={()=>{setSelectedFile(null);setIsOpen(false)}} ariaHideApp={false} className='w-[60%] p-6 absolute top-36 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md   '
+        <Modal isOpen={isOpen} onRequestClose={()=>{setSelectedFile(null);setIsOpen(false)}} ariaHideApp={false} className='w-[60%] p-6 absolute top-16 left-[50%] translate-x-[-50%] bg-white border-2 rounded-md shadow-md   '
         >
            {largeFile && <div className='w-1/4 h-12 border border-3 text-red-600 text-md p-4 flex items-center justify-center'>{largeFile}</div>}
           {selectedFile && (<div className='p-8 rounded-full bg-slate-800 text-white text-md  w-full sm:w-1/4 h-10 flex items-center justify-center'>{` ${Math.round(uploadProgress)}% done`}</div>)}
@@ -209,7 +209,7 @@ location.reload();
                 ['code-block']
               ],
             }}
-            className='w-full h-80 overflow-auto border text-center focus:ring-0 outline-none resize-none'
+            className='w-full h-40 overflow-auto border text-center focus:ring-0 outline-none resize-none'
           />
            
            <button onClick={handleSubmit} disabled={!caption.trim() || postUploading || imageFileUploading} className='w-full bg-red-600 text-white p-2 shadow-md rounded-lg hover:brightness-105 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:hover:brightness-100'>
