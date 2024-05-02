@@ -38,6 +38,7 @@ console.log("URL",URL)
   console.log("post url",post.image,post.caption)
   return (
     <div className='bg-white my-7 border rounded-md'>
+      <h1>{post.id}</h1>
         <div className='flex items-center p-5 border-b border-gray-500'>
       <img  src={post.profileImg} alt={post.username} className='h-12 rounded-full object-cover border p-1 mr-3'/>
       <p className='flex-1 font-bold'>{post.username}</p>
