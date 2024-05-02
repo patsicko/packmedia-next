@@ -24,12 +24,15 @@ querySnapshoot.forEach((doc)=>{
 
   return (
     <div>
-      {data.map((post)=>(
-        <div key={post.id} >
-          {post.id} 
+      {data.length&&(
+data.map((post)=>(
+  <div key={post.id} >
+    {post.id} 
 
 </div>
-      ))}
+))
+      )}
+    
 
    
     </div>
