@@ -1,11 +1,12 @@
 "use client"
 import Link from 'next/link'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { MouseEvent, ChangeEvent, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { signIn,useSession,signOut } from 'next-auth/react' 
 import Modal from "react-modal"
 import { IoAddCircleOutline } from "react-icons/io5";
 import { HiCamera } from 'react-icons/hi'
+import { FiSearch } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '@/firebase'
@@ -15,7 +16,9 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation'
 
 
+
 import 'react-quill/dist/quill.snow.css';
+import { useOutsideClick } from './outsideClicked'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 
@@ -40,7 +43,15 @@ function Header() {
   const [caption,setCaption] = useState('');
   const [isVideo,setIsVideo] = useState(false);
   const [uploadProgress,setUploadProgress]=useState(0);
-  const [largeFile,setLargeFile]=useState('')
+  const [largeFile,setLargeFile]=useState('');
+  const [searchVisible,setSearchVisible] = useState(false);
+
+  
+
+  const searchBarRef = useOutsideClick(() => {
+   
+  setSearchVisible(false)
+  })
 
   
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -78,6 +89,7 @@ function Header() {
     const fileName = new Date().getTime()+'-'+selectedFile?.name;
     const storageRef = ref(storage,fileName);
     const uploadTask = uploadBytesResumable(storageRef,selectedFile as Blob);
+   
    
     uploadTask.on(
       'state_changed',
@@ -137,14 +149,21 @@ setIsOpen(false);
         height={98}
         alt='pack logo'
         priority
-        className='rounded-md mx-4 '
+        className={`rounded-md mx-4 ${searchVisible ? 'hidden md:flex':'flex'}`}
         />
          </Link>
+         <div ref={searchBarRef}  className={`flex ${searchVisible ? 'border border-gray-200 rounded':''}   justify-center items-center`}>
+          
+          <FiSearch className='text-2xl flex md:hidden' onClick={()=>setSearchVisible(true)}/>
+          
+         
 
-         <input type="text" placeholder='search' className='bg-gray-50 border border-gray-200 rounded text-sm  py-2 px-4 max-w-[210px]' />
+        <input type="text" placeholder='search' className={`bg-gray-50 ${searchVisible ? 'flex':'hidden md:flex'}  border-none outline-none text-sm  py-2 px-4 max-w-[210px]`} />
+         </div>
+     
      {session ? (
       <div className='flex gap-2 items-center'>
-      <IoAddCircleOutline onClick={(e)=>setIsOpen(true)} className='text-4xl cursor-pointer transform hover:scale-125 transition duration-300 hover:text-red-600' />
+      <IoAddCircleOutline onClick={(e)=>setIsOpen(true)} className={` ${searchVisible ? 'hidden':'block'} text-4xl cursor-pointer transform hover:scale-125 transition duration-300 hover:text-red-600`} />
       {
       session.user && session.user.image?(<div className='flex justify-center items-center gap-3'>
         
